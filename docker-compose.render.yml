@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  syncyomi:
+    build:
+      context: .
+      dockerfile: render.Dockerfile
+    container_name: syncyomi-render
+    environment:
+      - HOST=0.0.0.0
+      - PORT=10000
+      - DATABASE_TYPE=postgres
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=syncyomi
+      - POSTGRES_USER=syncyomi
+      - POSTGRES_PASS=syncyomi
+    ports:
+      - '10000:10000'
+    depends_on:
+      - postgres
+    volumes:
+      - ./config:/app/config
+    restart: unless-stopped
+
+  postgres:
+    container_name: syncyomi-postgres-render
+    image: postgres:15.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=syncyomi
+      - POSTGRES_PASSWORD=syncyomi
+      - POSTGRES_DB=syncyomi
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_render:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U syncyomi"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_render:
+    driver: local 

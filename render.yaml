@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: syncyomi
+    env: docker
+    plan: starter
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 10000
+      - key: DATABASE_TYPE
+        value: sqlite
+    buildCommand: |
+      # Build frontend
+      cd web && npm install -g pnpm && pnpm install && pnpm build
+      # Build Go app
+      go mod download
+      go build -o bin/syncyomi main.go
+    startCommand: ./bin/syncyomi --config ./config
+    dockerfilePath: ./render.Dockerfile
+    dockerContext: .
+
+databases:
+  - name: syncyomi-postgres
+    databaseName: syncyomi
+    user: syncyomi
+    plan: starter
+    region: oregon 
