@@ -22,11 +22,4 @@ services:
       go build -o bin/syncyomi main.go
     startCommand: ./bin/syncyomi --config ./config
     dockerfilePath: ./render.Dockerfile
-    dockerContext: .
-
-databases:
-  - name: syncyomi-postgres
-    databaseName: syncyomi
-    user: syncyomi
-    plan: starter
-    region: oregon 
+    dockerContext: . 

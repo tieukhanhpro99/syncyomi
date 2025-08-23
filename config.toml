@@ -14,7 +14,7 @@ port = 10000
 
 # Database Type
 # Set database type to use. Supported: sqlite, postgres
-# For Render, we use SQLite for simplicity
+# For Render free tier, we use SQLite for simplicity
 #
 DatabaseType = "sqlite"
 
